@@ -1,4 +1,6 @@
+#include <Satoshi/stpch.hpp>
 #include "Application.hpp"
+
 #include "Log.hpp"
 #include <iostream>
 

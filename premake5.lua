@@ -12,6 +12,13 @@ workspace "Satoshi"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
+IncludeDir["GLFW"] = "Satoshi/vendor/GLFW/include"
+
+group "Dependencies"
+
+    include "Satoshi/vendor/GLFW"
+
+group ""
 
 project "Satoshi"
     location "Satoshi"
@@ -33,11 +40,14 @@ project "Satoshi"
 
     includedirs
     {
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.GLFW}",
+        "%{prj.name}/src",
     }
 
     links
     {
+        "GLFW"
     }
 
     filter "system:windows"
@@ -47,7 +57,7 @@ project "Satoshi"
 
         defines
         {
-            "ST_PLATFORM_MSDOS"
+            "ST_PLATFORM_WINDOWS"
         }
 
         links
@@ -85,8 +95,7 @@ project "Sandbox"
 
     includedirs
     {
-        "Satoshi/src",
-        "Satoshi/vendor"
+        "Satoshi/src"
     }
 
     links
@@ -102,6 +111,20 @@ project "Sandbox"
             "ST_PLATFORM_WINDOWS"
         }
     
+    filter {"system:windows", "configurations:Release"}
+        kind "WindowedAPP"
+        links
+        {
+            "LIBCMT.lib"
+        }
+    
+    filter {"system:windows", "configurations:Dist"}
+        kind "WindowedAPP"
+        links
+        {
+            "LIBCMT.lib"
+        }
+
     filter "configurations:Debug"
         defines "ST_DEBUG"
         symbols "on"
