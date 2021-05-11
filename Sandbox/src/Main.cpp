@@ -1,8 +1,10 @@
-#include "Hello.h"
+#include <Satoshi/Core/Application.hpp>
 
 int main() 
 {
-	Satoshi::Hello hello;
-	hello.Print();
+	Satoshi::Application *app = new Satoshi::Application();
+	app->Run();
+	delete app;
+
 	return 0;
 }

@@ -33,6 +33,7 @@ project "Satoshi"
 
     includedirs
     {
+        "%{prj.name}/vendor/spdlog/include"
     }
 
     links
