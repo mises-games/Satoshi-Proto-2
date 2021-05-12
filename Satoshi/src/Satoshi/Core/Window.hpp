@@ -36,10 +36,6 @@ namespace Satoshi {
 		virtual void SetWidth(uint32_t width) = 0;
 		virtual void SetHeight(uint32_t height) = 0;
 
-		// Window attributes
-		virtual void SetVSync(bool enabled) = 0;
-		virtual bool IsVSync() const = 0;
-
 		virtual void* GetNativeWindow() const = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());

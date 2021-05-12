@@ -1,3 +1,5 @@
+#ifdef ST_PLATFORM_WINDOWS
+
 #include <Satoshi/stpch.hpp>
 #include "Win32Window.hpp"
 
@@ -5,6 +7,8 @@
 #include <Satoshi/Events/KeyEvent.hpp>
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Core/MessageQueue.hpp>
+
+#include <Satoshi/Renderer/GraphicsContext.hpp>
 
 static uint16_t s_Win32WindowCount = 0;
 
@@ -61,11 +65,11 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 		return;
 	}
 
+	m_Context = new D3D11Context(m_Window);
+	m_Context->Init();
 
 	ShowWindow(m_Window, SW_SHOW);
 	UpdateWindow(m_Window);
-
-	SetVSync(true);
 }
 
 void Satoshi::Win32Window::Shutdown()
@@ -234,13 +238,4 @@ void Satoshi::Win32Window::OnUpdate()
 	DispatchMessage(&msg);
 }
 
-void Satoshi::Win32Window::SetVSync(bool enabled)
-{
-	ST_CORE_WARN("Win32 needs D3D to set VSync");
-	m_Data.VSync = enabled;
-}
-
-bool Satoshi::Win32Window::IsVSync() const
-{
-	return m_Data.VSync;
-}
+#endif

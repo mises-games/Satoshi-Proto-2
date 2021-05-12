@@ -2,7 +2,10 @@
 #define GLF_WINDOW_HPP
 
 #include <Satoshi/Core/Window.hpp>
-#include <GLFW/glfw3.h>
+#include <Satoshi/stpch.hpp>
+#include <Satoshi/Renderer/GraphicsContext.hpp>
+
+#include <glfw/glfw3.h>
 
 namespace Satoshi
 {
@@ -19,9 +22,6 @@ namespace Satoshi
 		virtual void SetWidth(uint32_t width) override { m_Data.Width = width; }
 		virtual void SetHeight(uint32_t height) override { m_Data.Height = height; }
 
-		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
-
 		virtual void* GetNativeWindow() const { return m_Window; }
 	private:
 		virtual void Init(const WindowProps& props);
@@ -30,12 +30,12 @@ namespace Satoshi
 		void SetGLCallbacks();
 
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
 			std::string Title;
 			unsigned int Width, Height;
-			bool VSync;
 		};
 
 		WindowData m_Data;

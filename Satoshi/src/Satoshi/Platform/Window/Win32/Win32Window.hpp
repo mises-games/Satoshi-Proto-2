@@ -1,8 +1,12 @@
+#ifdef ST_PLATFORM_WINDOWS
+
 #ifndef WIN_32_WINDOW_HPP
 #define WIN_32_WINDOW_HPP
 
 #include <Satoshi/stpch.hpp>
 #include <Satoshi/Core/Window.hpp>
+
+#include <Satoshi/Platform/Renderer/D3D11/D3D11Context.hpp>
 
 namespace Satoshi
 {
@@ -19,10 +23,6 @@ namespace Satoshi
 		virtual void SetWidth(uint32_t width) override { m_Data.Width = width; }
 		virtual void SetHeight(uint32_t height) override { m_Data.Height = height; }
 
-		// Window attributes
-		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
-
 		virtual void* GetNativeWindow() const { return m_Window; }
 	private:
 		void Init(const WindowProps& props);
@@ -37,7 +37,7 @@ namespace Satoshi
 
 		HWND m_Window;
 		HINSTANCE m_HandleInstance;
-		MSG m_MSG;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{
@@ -49,5 +49,7 @@ namespace Satoshi
 		WindowData m_Data;
 	};
 }
+
+#endif
 
 #endif

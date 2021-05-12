@@ -6,7 +6,7 @@
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Core/MessageQueue.hpp>
 
-#include <glad/gl.h>
+#include <Satoshi/Platform/Renderer/GL4/GL4Context.hpp>
 
 static uint16_t s_GLFWindowCount = 0;
 
@@ -44,13 +44,10 @@ void Satoshi::GLFWindow::Init(const WindowProps& props)
 	m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 	++s_GLFWindowCount;
 
-	glfwMakeContextCurrent(m_Window);
-
-	int status = gladLoadGL(glfwGetProcAddress);
-	ST_CORE_ASSERT(status, "Failed to initialize GLAD");
+	m_Context = new GL4Context(m_Window);
+	m_Context->Init();
 
 	glfwSetWindowUserPointer(m_Window, &m_Data);
-	SetVSync(true);
 
 	SetGLCallbacks();
 }
@@ -137,22 +134,6 @@ void Satoshi::GLFWindow::SetGLCallbacks()
 
 void Satoshi::GLFWindow::OnUpdate()
 {
-
 	glfwPollEvents();
-	glfwSwapBuffers(m_Window);
-}
-
-void Satoshi::GLFWindow::SetVSync(bool enabled)
-{
-	if (enabled)
-		glfwSwapInterval(1);
-	else
-		glfwSwapInterval(0);
-
-	m_Data.VSync = enabled;
-}
-
-bool Satoshi::GLFWindow::IsVSync() const
-{
-	return m_Data.VSync;
+	m_Context->SwapBuffers();
 }

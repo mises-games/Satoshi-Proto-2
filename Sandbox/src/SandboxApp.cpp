@@ -6,7 +6,7 @@ class Sandbox : public Satoshi::Application
 {
 public:
 	Sandbox() :
-		Satoshi::Application(Satoshi::RendererAPI::GL4)
+		Satoshi::Application(Satoshi::RendererAPI::D3D11)
 	{
 		
 	}

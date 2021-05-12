@@ -51,8 +51,7 @@ project "Satoshi"
     links
     {
         "GLFW",
-        "GLAD_GL",
-        "opengl32.lib"
+        "GLAD_GL"
     }
 
     filter "system:windows"
@@ -68,6 +67,9 @@ project "Satoshi"
 
         links
         {
+            "opengl32.lib",
+            "d3d11.lib",
+            "d3dcompiler.lib"
         }
     
     filter "configurations:Debug"
