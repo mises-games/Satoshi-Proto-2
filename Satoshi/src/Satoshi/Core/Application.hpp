@@ -3,8 +3,9 @@
 
 #include <Satoshi/Renderer/APIController.hpp>
 #include <Satoshi/Core/Window.hpp>
-#include <Satoshi/Events/ApplicationEvent.hpp>
 #include "MessageQueue.hpp"
+#include <Satoshi/Events/ApplicationEvent.hpp>
+#include <Satoshi/Core/LayerStack.hpp>
 
 namespace Satoshi
 {
@@ -17,8 +18,8 @@ namespace Satoshi
 		void Run();
 		void OnEvent(Event& e);
 
-		bool OnWindowClose(WindowCloseEvent& e);
-		bool OnWindowResize(WindowResizeEvent& e);
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* overlay);
 
 		inline static Application& GetInstance() { return *s_Instance; }
 	private:
@@ -26,7 +27,15 @@ namespace Satoshi
 
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
+		LayerStack m_LayerStack;
+
+		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+
+		
 	};
+
+	Application* CreateApplication();
 }
 
 #endif

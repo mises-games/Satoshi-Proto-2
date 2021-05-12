@@ -6,6 +6,8 @@
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Core/MessageQueue.hpp>
 
+#include <glad/gl.h>
+
 static uint16_t s_GLFWindowCount = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -43,6 +45,9 @@ void Satoshi::GLFWindow::Init(const WindowProps& props)
 	++s_GLFWindowCount;
 
 	glfwMakeContextCurrent(m_Window);
+
+	int status = gladLoadGL(glfwGetProcAddress);
+	ST_CORE_ASSERT(status, "Failed to initialize GLAD");
 
 	glfwSetWindowUserPointer(m_Window, &m_Data);
 	SetVSync(true);

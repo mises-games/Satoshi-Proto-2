@@ -13,10 +13,12 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Satoshi/vendor/GLFW/include"
+IncludeDir["GLAD_GL"] = "Satoshi/vendor/GLAD_GL/include"
 
 group "Dependencies"
 
     include "Satoshi/vendor/GLFW"
+    include "Satoshi/vendor/GLAD_GL"
 
 group ""
 
@@ -42,12 +44,15 @@ project "Satoshi"
     {
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
-        "%{prj.name}/src",
+        "%{IncludeDir.GLAD_GL}",
+        "%{prj.name}/src"
     }
 
     links
     {
-        "GLFW"
+        "GLFW",
+        "GLAD_GL",
+        "opengl32.lib"
     }
 
     filter "system:windows"
@@ -57,7 +62,8 @@ project "Satoshi"
 
         defines
         {
-            "ST_PLATFORM_WINDOWS"
+            "ST_PLATFORM_WINDOWS",
+            "GLFW_INCLUDE_NONE"
         }
 
         links
@@ -110,20 +116,6 @@ project "Sandbox"
         defines
         {
             "ST_PLATFORM_WINDOWS"
-        }
-    
-    filter {"system:windows", "configurations:Release"}
-        kind "WindowedAPP"
-        links
-        {
-            "gdi32.lib"
-        }
-    
-    filter {"system:windows", "configurations:Dist"}
-        kind "WindowedAPP"
-        links
-        {
-            "gdi32.lib"
         }
 
     filter "configurations:Debug"

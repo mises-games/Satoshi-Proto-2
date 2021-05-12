@@ -4,3 +4,6 @@
 [submodule "Satoshi/vendor/GLFW"]
 	path = Satoshi/vendor/GLFW
 	url = https://github.com/mises-games/glfw.git
+[submodule "Satoshi/vendor/GLAD_GL"]
+	path = Satoshi/vendor/GLAD_GL
+	url = https://github.com/mises-games/glad_gl.git

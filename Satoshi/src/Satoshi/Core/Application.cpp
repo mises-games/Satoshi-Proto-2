@@ -1,8 +1,5 @@
 #include <Satoshi/stpch.hpp>
 #include "Application.hpp"
-
-#include "Log.hpp"
-#include <iostream>
 #include "MessageQueue.hpp"
 
 Satoshi::Application* Satoshi::Application::s_Instance = nullptr;
@@ -37,6 +34,24 @@ void Satoshi::Application::OnEvent(Event& e)
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<WindowCloseEvent>(ST_BIND_EVENT_FUNCTION(Application::OnWindowClose));
 	dispatcher.Dispatch<WindowResizeEvent>(ST_BIND_EVENT_FUNCTION(Application::OnWindowResize));
+
+	for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+	{
+		it--;
+		(*it)->OnEvent(e);
+		if (e.Handled)
+			break;
+	}
+}
+
+void Satoshi::Application::PushLayer(Layer* layer)
+{
+	m_LayerStack.PushLayer(layer);
+}
+
+void Satoshi::Application::PushOverlay(Layer* overlay)
+{
+	m_LayerStack.PushOverlay(overlay);
 }
 
 bool Satoshi::Application::OnWindowClose(WindowCloseEvent& e)
