@@ -95,7 +95,8 @@ project "Sandbox"
 
     includedirs
     {
-        "Satoshi/src"
+        "Satoshi/src",
+        "Satoshi/vendor/spdlog/include"
     }
 
     links
@@ -115,14 +116,14 @@ project "Sandbox"
         kind "WindowedAPP"
         links
         {
-            "LIBCMT.lib"
+            "gdi32.lib"
         }
     
     filter {"system:windows", "configurations:Dist"}
         kind "WindowedAPP"
         links
         {
-            "LIBCMT.lib"
+            "gdi32.lib"
         }
 
     filter "configurations:Debug"

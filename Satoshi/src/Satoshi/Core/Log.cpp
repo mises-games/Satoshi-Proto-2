@@ -11,7 +11,7 @@ void Satoshi::Log::Init()
 {
 	std::vector<spdlog::sink_ptr> logSinks;
 
-	#if (defined(ST_PLATFORM_WINDOWS) && (defined(ST_RELEASE) || defined(ST_DIST)))
+	#if ((defined(ST_RELEASE) || defined(ST_DIST)))
 
 		logSinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/Satoshi.log"));
 

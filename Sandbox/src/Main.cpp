@@ -10,7 +10,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
-	Satoshi::Application* app = new Satoshi::Application();
+	Satoshi::Application* app = new Satoshi::Application(Satoshi::RendererAPI::D3D11);
 	app->Run();
 	delete app;
 
@@ -21,7 +21,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 int main()
 {
-	Satoshi::Application* app = new Satoshi::Application();
+	Satoshi::Application* app = new Satoshi::Application(Satoshi::RendererAPI::D3D11);
 	app->Run();
 	delete app;
 
