@@ -5,6 +5,7 @@
 
 #include <Satoshi/Events/Event.hpp>
 #include "Macros.hpp"
+#include <imgui.h>
 
 namespace Satoshi {
 
@@ -36,7 +37,19 @@ namespace Satoshi {
 		virtual void SetWidth(uint32_t width) = 0;
 		virtual void SetHeight(uint32_t height) = 0;
 
-		virtual void* GetNativeWindow() const = 0;
+		virtual double GetTime() const = 0;
+
+		virtual void Present() = 0;
+		virtual void ClearBuffer() = 0;
+
+		virtual void ImGuiInit() = 0;
+		virtual void ImGuiShutdown() = 0;
+		virtual void ImGuiNewFrame() = 0;
+		
+		virtual void RendererImGuiInit() = 0;
+		virtual void RendererImGuiShutdown() = 0;
+		virtual void RendererImGuiNewFrame() = 0;
+		virtual void RendererImGuiRenderDrawData(ImDrawData* drawData) = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

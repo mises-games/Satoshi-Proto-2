@@ -12,7 +12,7 @@ namespace Satoshi
 	class Application
 	{
 	public:
-		Application(RendererAPI startAPI);
+		Application(RendererAPI rendererAPI);
 		virtual ~Application();
 
 		void Run();
@@ -21,7 +21,21 @@ namespace Satoshi
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
-		inline static Application& GetInstance() { return *s_Instance; }
+		void WindowImGuiInit() { m_Window->ImGuiInit(); }
+		void WindowImGuiShutdown() { m_Window->ImGuiShutdown(); }
+		void WindowImGuiNewFrame() { m_Window->ImGuiNewFrame(); }
+
+		void RendererImGuiInit() { m_Window->RendererImGuiInit(); }
+		void RendererImGuiShutdown() { m_Window->RendererImGuiShutdown(); }
+		void RendererImGuiNewFrame() { m_Window->RendererImGuiNewFrame(); }
+		void RendererImGuiRenderDrawData(ImDrawData* drawData) { m_Window->RendererImGuiRenderDrawData(drawData); }
+
+		float GetWindowTime() { return m_Window->GetTime(); }
+
+		uint32_t GetWindowWidth() const { return m_Window->GetWidth(); }
+		uint32_t GetWindowHeight() const { return m_Window->GetHeight(); }
+
+		inline static Application* GetInstance() { return s_Instance; }
 	private:
 		static Application* s_Instance;
 
@@ -31,8 +45,6 @@ namespace Satoshi
 
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
-
-		
 	};
 
 	Application* CreateApplication();

@@ -4,21 +4,35 @@
 #include <Satoshi/stpch.hpp>
 #include <Satoshi/Renderer/GraphicsContext.hpp>
 
-#include <glfw/glfw3.h>
-#include <glad/gl.h>
+#include <glad/wgl.h>
+#include <Satoshi/Platform/Renderer/GL4/GL4ImGuiImpl.hpp>
 
 namespace Satoshi 
 {
 	class GL4Context : public GraphicsContext
 	{
 	public:
-		GL4Context(GLFWwindow* windowHandle);
+#ifdef ST_PLATFORM_WINDOWS
+		GL4Context(HWND windowHandle);
+		virtual ~GL4Context();
+		
+#else
+#endif
 
-		virtual void Init() override;
-		virtual void SwapBuffers() override;
+		virtual void Present() override;
+		virtual void ClearBuffer() override;
+
+		virtual void ImGuiInit() override { ImGui_ImplOpenGL3_Init("#version 410"); }
+		virtual void ImGuiShutdown() override { ImGui_ImplOpenGL3_Shutdown(); }
+		virtual void ImGuiNewFrame() override { ImGui_ImplOpenGL3_NewFrame(); }
+		virtual void ImGuiRenderDrawData(ImDrawData* drawData) override { ImGui_ImplOpenGL3_RenderDrawData(drawData); }
 
 	private:
-		GLFWwindow* m_WindowHandle;
+#ifdef ST_PLATFORM_WINDOWS
+		HWND m_Win32WindowHandle;
+		HDC m_HandleDevice;
+		HGLRC m_GLContext;
+#endif
 	};
 }
 

@@ -1,9 +1,9 @@
 [submodule "Satoshi/vendor/spdlog"]
 	path = Satoshi/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "Satoshi/vendor/GLFW"]
-	path = Satoshi/vendor/GLFW
-	url = https://github.com/mises-games/glfw.git
 [submodule "Satoshi/vendor/GLAD_GL"]
 	path = Satoshi/vendor/GLAD_GL
 	url = https://github.com/mises-games/glad_gl.git
+[submodule "Satoshi/vendor/ImGui"]
+	path = Satoshi/vendor/ImGui
+	url = https://github.com/mises-games/imgui.git

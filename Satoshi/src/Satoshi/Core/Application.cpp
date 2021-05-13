@@ -4,12 +4,12 @@
 
 Satoshi::Application* Satoshi::Application::s_Instance = nullptr;
 
-Satoshi::Application::Application(Satoshi::RendererAPI startAPI)
+Satoshi::Application::Application(Satoshi::RendererAPI rendererAPI)
 {
 	s_Instance = this;
 	Satoshi::Log::Init();
 
-	APIController::SetAPI(startAPI);
+	APIController::SetRendererAPI(rendererAPI);
 
 	m_Window.reset(Window::Create());
 
@@ -24,8 +24,14 @@ Satoshi::Application::~Application()
 
 void Satoshi::Application::Run()
 {
-	while (m_Running)
+	while (m_Running) 
+	{
+		m_Window->ClearBuffer();
+		for (Layer* layer : m_LayerStack)
+			layer->OnUpdate();
 		m_Window->OnUpdate();
+		m_Window->Present();
+	}
 }
 
 void Satoshi::Application::OnEvent(Event& e)

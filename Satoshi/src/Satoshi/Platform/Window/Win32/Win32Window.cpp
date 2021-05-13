@@ -65,8 +65,15 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 		return;
 	}
 
-	m_Context = new D3D11Context(m_Window);
-	m_Context->Init();
+	m_DeviceHandle = GetDC(m_Window);
+	PIXELFORMATDESCRIPTOR pfd = GetPixelFormat();
+	auto windowsPixelFormat = ChoosePixelFormat(m_DeviceHandle, &pfd);
+	SetPixelFormat(m_DeviceHandle, windowsPixelFormat, &pfd);
+
+	QueryPerformanceCounter((LARGE_INTEGER*)&m_StartTime);
+	QueryPerformanceFrequency((LARGE_INTEGER*) &m_Frequency);
+
+	m_Context = GraphicsContext::Create(m_Window);
 
 	ShowWindow(m_Window, SW_SHOW);
 	UpdateWindow(m_Window);
@@ -74,7 +81,9 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 
 void Satoshi::Win32Window::Shutdown()
 {
+	ReleaseDC(m_Window,m_DeviceHandle);
 	DestroyWindow(m_Window);
+	
 	--s_Win32WindowCount;
 }
 
@@ -82,6 +91,21 @@ void Satoshi::Win32Window::CalculateWindowDimensionInitialization(LPRECT dimensi
 {
 	*dimensions = { 0, 0, (LONG)m_Data.Width, (LONG)m_Data.Height };
 	AdjustWindowRectEx(dimensions, WS_OVERLAPPEDWINDOW, 0, 0);
+}
+
+PIXELFORMATDESCRIPTOR Satoshi::Win32Window::GetPixelFormat()
+{
+	PIXELFORMATDESCRIPTOR result = {};
+	result.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+	result.nVersion = 1;
+	result.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	result.iPixelType = PFD_TYPE_RGBA;
+	result.cColorBits = 32;
+	result.cDepthBits = 24;
+	result.cStencilBits = 8;
+	result.cAuxBuffers = 0;
+	result.iLayerType = PFD_MAIN_PLANE;
+	return result;
 }
 
 LRESULT Satoshi::Win32Window::Callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -210,7 +234,7 @@ void Satoshi::Win32Window::SetStartupParameters(HINSTANCE* instance, LPWSTR* lpC
 void Satoshi::Win32Window::SetWindowClass(WNDCLASSEXW* windowClass)
 {
 	windowClass->cbSize = sizeof(*windowClass);
-	windowClass->style = CS_OWNDC;
+	windowClass->style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	windowClass->lpfnWndProc = Win32Window::Callback;
 	windowClass->cbClsExtra = 0;
 	windowClass->cbWndExtra = 0;

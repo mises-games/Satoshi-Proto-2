@@ -12,13 +12,13 @@ workspace "Satoshi"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["GLFW"] = "Satoshi/vendor/GLFW/include"
 IncludeDir["GLAD_GL"] = "Satoshi/vendor/GLAD_GL/include"
+IncludeDir["ImGui"] = "Satoshi/vendor/ImGui"
 
 group "Dependencies"
 
-    include "Satoshi/vendor/GLFW"
     include "Satoshi/vendor/GLAD_GL"
+    include "Satoshi/vendor/ImGui"
 
 group ""
 
@@ -43,14 +43,14 @@ project "Satoshi"
     includedirs
     {
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}",
         "%{IncludeDir.GLAD_GL}",
+        "%{IncludeDir.ImGui}",
         "%{prj.name}/src"
     }
 
     links
     {
-        "GLFW",
+        "ImGui",
         "GLAD_GL"
     }
 
@@ -104,6 +104,7 @@ project "Sandbox"
     includedirs
     {
         "Satoshi/src",
+        "Satoshi/vendor/ImGui",
         "Satoshi/vendor/spdlog/include"
     }
 
