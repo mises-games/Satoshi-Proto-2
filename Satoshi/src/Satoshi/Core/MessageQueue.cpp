@@ -4,6 +4,7 @@
 #include <Satoshi/Events/KeyEvent.hpp>
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Events/ApplicationEvent.hpp>
+#include <Satoshi/Events/SocketEvent.hpp>
 
 std::mutex Satoshi::MessageQueue::s_Mutex;
 bool Satoshi::MessageQueue::s_Running = true;
@@ -28,8 +29,8 @@ Satoshi::MessageQueueData Satoshi::MessageQueue::DequeueMessage()
 {
 	MessageQueueData msg;
 
-	s_Mutex.lock();
 	msg = s_AppMessages.front();
+	s_Mutex.lock();
 	s_AppMessages.pop();
 	s_Mutex.unlock();
 
@@ -74,13 +75,37 @@ void Satoshi::MessageQueue::ProcessEvents(Satoshi::MessageQueueData msg)
 	{ return; }
 
 	case Satoshi::EventType::SocketCreated:
-	{ return; }
+	{ 
+		auto data = (SocketData*)msg.Data;
+		SocketCreatedEvent event(data->Host, data->Port, data->SocketType, data->IpFamily);
+		delete data;
+		s_Callback(event);
+		return;
+	}
 	case Satoshi::EventType::SocketDestroyed:
-	{ return; }
+	{ 
+		auto data = (SocketData*)msg.Data;
+		SocketDestroyedEvent event(data->Host, data->Port, data->SocketType, data->IpFamily);
+		delete data;
+		s_Callback(event);
+		return;
+	}
 	case Satoshi::EventType::SocketSentMessage:
-	{ return; }
+	{ 
+		auto data = (SocketMessageData*)msg.Data;
+		SocketSentMessageEvent event(data->Message,data->Host, data->Port, data->SocketType, data->IpFamily);
+		delete data;
+		s_Callback(event);
+		return; 
+	}
 	case Satoshi::EventType::SocketReceivedMessage:
-	{ return; }
+	{
+		auto data = (SocketMessageData*)msg.Data;
+		SocketReceivedMessageEvent event(data->Message, data->Host, data->Port, data->SocketType, data->IpFamily);
+		delete data;
+		s_Callback(event);
+		return;
+	}
 
 	case Satoshi::EventType::KeyPressed:
 	{

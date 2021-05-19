@@ -7,3 +7,6 @@
 [submodule "Satoshi/vendor/ImGui"]
 	path = Satoshi/vendor/ImGui
 	url = https://github.com/mises-games/imgui.git
+[submodule "Satoshi/vendor/yaml_cpp"]
+	path = Satoshi/vendor/yaml_cpp
+	url = https://github.com/mises-games/yaml_cpp.git

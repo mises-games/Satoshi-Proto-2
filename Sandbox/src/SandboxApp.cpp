@@ -7,7 +7,7 @@ class Sandbox : public Satoshi::Application
 {
 public:
 	Sandbox() :
-		Satoshi::Application(Satoshi::RendererAPI::D3D11)
+		Satoshi::Application()
 	{
 		PushLayer(new Satoshi::ImGuiLayer());
 	}

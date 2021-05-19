@@ -63,7 +63,7 @@ void Satoshi::D3D11Context::Present()
 
 void Satoshi::D3D11Context::ClearBuffer()
 {
-	const float Color[4] = { 1,1,0,1 };
+	const float Color[4] = { 0,.5f,.25f,1.0f };
 	m_DeviceContext->OMSetRenderTargets(1, &m_TargetView, NULL);
 	m_DeviceContext->ClearRenderTargetView(m_TargetView, Color);
 }

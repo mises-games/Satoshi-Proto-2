@@ -1,15 +1,22 @@
-#include <Satoshi/stpch.hpp>
+﻿#include <Satoshi/stpch.hpp>
 #include "Application.hpp"
 #include "MessageQueue.hpp"
+#include <Satoshi/FileSystem/FileHandler.hpp>
 
 Satoshi::Application* Satoshi::Application::s_Instance = nullptr;
 
-Satoshi::Application::Application(Satoshi::RendererAPI rendererAPI)
+Satoshi::Application::Application()
 {
+	std::string settings;
+	bool read = Satoshi::FileHandler::Load("settings/settings.yaml", &settings);
+	YAML::Node startupArgs = YAML::Load(settings);
+	std::cout << "Loading Settings Files\n";
+	assert(startupArgs["Window"]);
+
 	s_Instance = this;
 	Satoshi::Log::Init();
 
-	APIController::SetRendererAPI(rendererAPI);
+	APIController::SetRendererAPI((Satoshi::RendererAPI)startupArgs["Window"]["Renderer"].as<uint32_t>());
 
 	m_Window.reset(Window::Create());
 
@@ -24,6 +31,7 @@ Satoshi::Application::~Application()
 
 void Satoshi::Application::Run()
 {
+	
 	while (m_Running) 
 	{
 		m_Window->ClearBuffer();

@@ -12,7 +12,7 @@ namespace Satoshi
 	class Application
 	{
 	public:
-		Application(RendererAPI rendererAPI);
+		Application();
 		virtual ~Application();
 
 		void Run();

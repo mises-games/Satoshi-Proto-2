@@ -14,11 +14,13 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLAD_GL"] = "Satoshi/vendor/GLAD_GL/include"
 IncludeDir["ImGui"] = "Satoshi/vendor/ImGui"
+IncludeDir["yaml_cpp"] = "Satoshi/vendor/yaml_cpp/include"
 
 group "Dependencies"
 
     include "Satoshi/vendor/GLAD_GL"
     include "Satoshi/vendor/ImGui"
+    include "Satoshi/vendor/yaml_cpp"
 
 group ""
 
@@ -45,12 +47,14 @@ project "Satoshi"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLAD_GL}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.yaml_cpp}",
         "%{prj.name}/src"
     }
 
     links
     {
         "ImGui",
+        "yaml_cpp",
         "GLAD_GL"
     }
 
@@ -61,15 +65,15 @@ project "Satoshi"
 
         defines
         {
-            "ST_PLATFORM_WINDOWS",
-            "GLFW_INCLUDE_NONE"
+            "ST_PLATFORM_WINDOWS"
         }
 
         links
         {
             "opengl32.lib",
             "d3d11.lib",
-            "d3dcompiler.lib"
+            "d3dcompiler.lib",
+            "Ws2_32.lib"
         }
     
     filter "configurations:Debug"
@@ -97,6 +101,7 @@ project "Sandbox"
     files
     {
         "%{prj.name}/src/**.h",
+        "%{prj.name}/**.yaml",
         "%{prj.name}/src/**.hpp",
         "%{prj.name}/src/**.cpp"
     }
@@ -105,14 +110,19 @@ project "Sandbox"
     {
         "Satoshi/src",
         "Satoshi/vendor/ImGui",
-        "Satoshi/vendor/spdlog/include"
+        "Satoshi/vendor/spdlog/include",
+        "Satoshi/vendor/yaml_cpp/include"
     }
 
     links
     {
         "Satoshi"
     }
-    
+
+    filter "files:**.yaml"
+        buildaction "Resource"
+
+
     filter "system:windows"
         systemversion "latest"
 
