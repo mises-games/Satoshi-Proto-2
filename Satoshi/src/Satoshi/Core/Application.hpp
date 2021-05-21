@@ -30,7 +30,8 @@ namespace Satoshi
 		void RendererImGuiNewFrame() { m_Window->RendererImGuiNewFrame(); }
 		void RendererImGuiRenderDrawData(ImDrawData* drawData) { m_Window->RendererImGuiRenderDrawData(drawData); }
 
-		float GetWindowTime() { return m_Window->GetTime(); }
+		float GetWindowTime() { return (float) m_Window->GetTime(); }
+		void* GetNativeWindow() { return m_Window->GetNativeWindow(); }
 
 		uint32_t GetWindowWidth() const { return m_Window->GetWidth(); }
 		uint32_t GetWindowHeight() const { return m_Window->GetHeight(); }

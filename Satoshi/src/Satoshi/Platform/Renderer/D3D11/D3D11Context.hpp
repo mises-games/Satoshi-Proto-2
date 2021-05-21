@@ -25,7 +25,7 @@ namespace Satoshi
 		virtual void ImGuiRenderDrawData(ImDrawData* drawData) override { ImGui_ImplDX11_RenderDrawData(drawData); }
 
 	private:
-		void Init();
+		void Init(HWND windowHandle);
 
 		HWND m_WindowHandle;
 

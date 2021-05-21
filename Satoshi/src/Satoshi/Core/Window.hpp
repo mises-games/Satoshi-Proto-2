@@ -42,6 +42,8 @@ namespace Satoshi {
 		virtual void Present() = 0;
 		virtual void ClearBuffer() = 0;
 
+		virtual void* GetNativeWindow() = 0;
+
 		virtual void ImGuiInit() = 0;
 		virtual void ImGuiShutdown() = 0;
 		virtual void ImGuiNewFrame() = 0;

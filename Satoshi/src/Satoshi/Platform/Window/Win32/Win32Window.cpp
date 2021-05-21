@@ -8,6 +8,7 @@
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Core/MessageQueue.hpp>
 
+
 #include <Satoshi/Renderer/GraphicsContext.hpp>
 
 static uint16_t s_Win32WindowCount = 0;
@@ -32,16 +33,15 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 
 	LPWSTR nCmdLine;
 	uint16_t nCmdShow;
-	WNDCLASSEXW windowClass = { 0 };
 	POINT initPoint;
 	RECT windowDimensions;
 
 	SetStartupParameters(&m_HandleInstance, &nCmdLine, &nCmdShow);
-	SetWindowClass(&windowClass);
+	SetWindowClass(&m_WindowClass);
 	CalculateWindowDimensionInitialization(&windowDimensions);
 	DefineWindowPosInitialization(&initPoint, windowDimensions);
 
-	RegisterClassExW(&windowClass);
+	RegisterClassExW(&m_WindowClass);
 
 	m_Window = CreateWindowExW
 	(
@@ -98,7 +98,7 @@ PIXELFORMATDESCRIPTOR Satoshi::Win32Window::GetPixelFormat()
 	PIXELFORMATDESCRIPTOR result = {};
 	result.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	result.nVersion = 1;
-	result.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	result.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DIRECT3D_ACCELERATED | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 	result.iPixelType = PFD_TYPE_RGBA;
 	result.cColorBits = 32;
 	result.cDepthBits = 24;

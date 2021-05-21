@@ -2,6 +2,8 @@
 #include "Application.hpp"
 #include "MessageQueue.hpp"
 #include <Satoshi/FileSystem/FileHandler.hpp>
+#include "Input.hpp"
+#include "InputCodes.hpp"
 
 Satoshi::Application* Satoshi::Application::s_Instance = nullptr;
 

@@ -3,13 +3,12 @@
 #include <Satoshi/stpch.hpp>
 #include "D3D11Context.hpp"
 
-Satoshi::D3D11Context::D3D11Context(HWND windowHandle) :
-	m_WindowHandle(windowHandle)
+Satoshi::D3D11Context::D3D11Context(HWND windowHandle)
 {
-	Init();
+	Init(windowHandle);
 }
 
-void Satoshi::D3D11Context::Init()
+void Satoshi::D3D11Context::Init(HWND windowHandle)
 {
 	HRESULT debug;
 	swapDesc.BufferDesc.Width = 0;
@@ -23,7 +22,7 @@ void Satoshi::D3D11Context::Init()
 	swapDesc.SampleDesc.Quality = 0;
 	swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapDesc.BufferCount = 1;
-	swapDesc.OutputWindow = m_WindowHandle;
+	swapDesc.OutputWindow = windowHandle;
 	swapDesc.Windowed = TRUE;
 	swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapDesc.Flags = 0;

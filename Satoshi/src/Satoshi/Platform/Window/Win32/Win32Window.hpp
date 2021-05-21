@@ -38,6 +38,8 @@ namespace Satoshi
 		virtual void ImGuiShutdown() override { ImGui_ImplWin32_Shutdown(); }
 		virtual void ImGuiNewFrame() override { ImGui_ImplWin32_NewFrame(); }
 
+		virtual void* GetNativeWindow() override { return m_Window; }
+
 		virtual void RendererImGuiInit() override { m_Context->ImGuiInit(); }
 		virtual void RendererImGuiShutdown() override { m_Context->ImGuiShutdown(); }
 		virtual void RendererImGuiNewFrame() override { m_Context->ImGuiNewFrame(); }
@@ -56,6 +58,7 @@ namespace Satoshi
 		static LRESULT Callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		HWND m_Window;
+		WNDCLASSEX m_WindowClass = {0};
 		HINSTANCE m_HandleInstance;
 		HDC m_DeviceHandle;
 		GraphicsContext* m_Context;
