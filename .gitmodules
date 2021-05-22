@@ -10,3 +10,12 @@
 [submodule "Satoshi/vendor/yaml_cpp"]
 	path = Satoshi/vendor/yaml_cpp
 	url = https://github.com/mises-games/yaml_cpp.git
+[submodule "Satoshi/vendor/glm"]
+	path = Satoshi/vendor/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "Satoshi/vendor/DirectXMath"]
+	path = Satoshi/vendor/DirectXMath
+	url = https://github.com/microsoft/DirectXMath.git
+[submodule "Satoshi/vendor/GLFW"]
+	path = Satoshi/vendor/GLFW
+	url = https://github.com/mises-games/glfw.git

@@ -7,10 +7,19 @@
 #include <Satoshi/Renderer/GraphicsContext.hpp>
 
 #include <d3d11.h>
-#include <Satoshi/Platform/Renderer/D3D11/D3D11ImGuiImpl.hpp>
+#include <backends/imgui_impl_dx11.h>
 
 namespace Satoshi
 {
+	struct ImGuiDX11Init
+	{
+		ID3D11Device* Device;
+		ID3D11DeviceContext* DeviceContext;
+
+		ImGuiDX11Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext) :
+			Device(device), DeviceContext(deviceContext)
+		{}
+	};
 	class D3D11Context : public GraphicsContext
 	{
 	public:
@@ -18,11 +27,9 @@ namespace Satoshi
 
 		virtual void Present() override;
 		virtual void ClearBuffer() override;
+		virtual void* GetNativeContextData() override;
 
-		virtual void ImGuiInit() override { ImGui_ImplDX11_Init(m_Device, m_DeviceContext); }
-		virtual void ImGuiShutdown() override { ImGui_ImplDX11_Shutdown(); }
-		virtual void ImGuiNewFrame() override { ImGui_ImplDX11_NewFrame(); }
-		virtual void ImGuiRenderDrawData(ImDrawData* drawData) override { ImGui_ImplDX11_RenderDrawData(drawData); }
+		virtual void SetVSync(bool enabled) override { m_VSync = enabled; }
 
 	private:
 		void Init(HWND windowHandle);
@@ -35,6 +42,8 @@ namespace Satoshi
 		
 		ID3D11RenderTargetView* m_TargetView;
 		DXGI_SWAP_CHAIN_DESC swapDesc = {};
+
+		bool m_VSync = false;
 	};
 }
 

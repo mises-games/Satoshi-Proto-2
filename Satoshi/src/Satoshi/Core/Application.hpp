@@ -6,6 +6,7 @@
 #include "MessageQueue.hpp"
 #include <Satoshi/Events/ApplicationEvent.hpp>
 #include <Satoshi/Core/LayerStack.hpp>
+#include <Satoshi/ImGui/ImGuiLayer.hpp>
 
 namespace Satoshi
 {
@@ -21,17 +22,8 @@ namespace Satoshi
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
-		void WindowImGuiInit() { m_Window->ImGuiInit(); }
-		void WindowImGuiShutdown() { m_Window->ImGuiShutdown(); }
-		void WindowImGuiNewFrame() { m_Window->ImGuiNewFrame(); }
-
-		void RendererImGuiInit() { m_Window->RendererImGuiInit(); }
-		void RendererImGuiShutdown() { m_Window->RendererImGuiShutdown(); }
-		void RendererImGuiNewFrame() { m_Window->RendererImGuiNewFrame(); }
-		void RendererImGuiRenderDrawData(ImDrawData* drawData) { m_Window->RendererImGuiRenderDrawData(drawData); }
-
 		float GetWindowTime() { return (float) m_Window->GetTime(); }
-		void* GetNativeWindow() { return m_Window->GetNativeWindow(); }
+		Window* GetWindow() { return m_Window.get(); }
 
 		uint32_t GetWindowWidth() const { return m_Window->GetWidth(); }
 		uint32_t GetWindowHeight() const { return m_Window->GetHeight(); }
@@ -41,6 +33,7 @@ namespace Satoshi
 		static Application* s_Instance;
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

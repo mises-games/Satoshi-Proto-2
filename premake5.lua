@@ -13,12 +13,16 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLAD_GL"] = "Satoshi/vendor/GLAD_GL/include"
+IncludeDir["GLFW"] = "Satoshi/vendor/GLFW/include"
 IncludeDir["ImGui"] = "Satoshi/vendor/ImGui"
 IncludeDir["yaml_cpp"] = "Satoshi/vendor/yaml_cpp/include"
+IncludeDir["glm"] = "Satoshi/vendor/glm"
+IncludeDir["DirectXMath"] = "Satoshi/vendor/DirectXMath/Inc"
 
 group "Dependencies"
 
     include "Satoshi/vendor/GLAD_GL"
+    include "Satoshi/vendor/GLFW"
     include "Satoshi/vendor/ImGui"
     include "Satoshi/vendor/yaml_cpp"
 
@@ -39,15 +43,24 @@ project "Satoshi"
         "%{prj.name}/src/**.inl",
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/src/**.glsl",
-        "%{prj.name}/src/**.hlsl"
+        "%{prj.name}/src/**.hlsl",
+        "%{prj.name}/vendor/glm/glm/**.inl",
+        "%{prj.name}/vendor/glm/glm/**.h",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/DirectXMath/**.h",
+        "%{prj.name}/vendor/DirectXMath/**.cpp",
+        "%{prj.name}/vendor/DirectXMath/**.inl"
     }
 
     includedirs
     {
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLAD_GL}",
+        "%{IncludeDir.GLFW}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.DirectXMath}",
         "%{prj.name}/src"
     }
 
@@ -55,7 +68,8 @@ project "Satoshi"
     {
         "ImGui",
         "yaml_cpp",
-        "GLAD_GL"
+        "GLAD_GL",
+        "GLFW"
     }
 
     filter "system:windows"

@@ -1,14 +1,12 @@
-#ifndef WIN32_INPUT_HPP
-#define WIN32_INPUT_HPP
-
-#ifdef ST_PLATFORM_WINDOWS
+#ifndef GLFW_INPUT_HPP
+#define GLFW_INPUT_HPP
 
 #include <Satoshi/Core/Input.hpp>
-#include "Win32InputMapper.hpp"
+#include "GLFWInputMapper.hpp"
 
 namespace Satoshi
 {
-	class Win32Input : public Input
+	class GLFWInput : public Input
 	{
 	public:
 		virtual bool IsKeyPressed(uint16_t keycode) override;
@@ -18,7 +16,5 @@ namespace Satoshi
 		virtual float GetMouseY() override;
 	};
 }
-
-#endif
 
 #endif

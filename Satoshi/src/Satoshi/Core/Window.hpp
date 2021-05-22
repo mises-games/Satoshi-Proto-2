@@ -4,8 +4,9 @@
 #include <Satoshi/stpch.hpp>
 
 #include <Satoshi/Events/Event.hpp>
+#include <Satoshi/Renderer/GraphicsContext.hpp>
 #include "Macros.hpp"
-#include <imgui.h>
+#include "Input.hpp"
 
 namespace Satoshi {
 
@@ -39,19 +40,14 @@ namespace Satoshi {
 
 		virtual double GetTime() const = 0;
 
+		virtual void SetVSync(bool enabled) = 0;
+
 		virtual void Present() = 0;
 		virtual void ClearBuffer() = 0;
 
 		virtual void* GetNativeWindow() = 0;
-
-		virtual void ImGuiInit() = 0;
-		virtual void ImGuiShutdown() = 0;
-		virtual void ImGuiNewFrame() = 0;
-		
-		virtual void RendererImGuiInit() = 0;
-		virtual void RendererImGuiShutdown() = 0;
-		virtual void RendererImGuiNewFrame() = 0;
-		virtual void RendererImGuiRenderDrawData(ImDrawData* drawData) = 0;
+		virtual GraphicsContext* GetContext() = 0;
+		virtual Input* GetInput() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

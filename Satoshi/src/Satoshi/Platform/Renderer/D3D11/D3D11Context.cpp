@@ -56,8 +56,7 @@ void Satoshi::D3D11Context::Init(HWND windowHandle)
 
 void Satoshi::D3D11Context::Present()
 {
-	HRESULT debug;
-	debug = m_Swapper->Present(1, 0);
+	HRESULT debug = m_Swapper->Present((UINT)m_VSync, 0);
 }
 
 void Satoshi::D3D11Context::ClearBuffer()
@@ -66,5 +65,11 @@ void Satoshi::D3D11Context::ClearBuffer()
 	m_DeviceContext->OMSetRenderTargets(1, &m_TargetView, NULL);
 	m_DeviceContext->ClearRenderTargetView(m_TargetView, Color);
 }
+
+void* Satoshi::D3D11Context::GetNativeContextData()
+{
+	return &ImGuiDX11Init(m_Device, m_DeviceContext);
+}
+
 
 #endif

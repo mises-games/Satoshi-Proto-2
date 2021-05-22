@@ -5,34 +5,31 @@
 #include <Satoshi/Renderer/GraphicsContext.hpp>
 
 #include <glad/wgl.h>
-#include <Satoshi/Platform/Renderer/GL4/GL4ImGuiImpl.hpp>
+#include <backends/imgui_impl_opengl3.h>
+#include <GLFW/glfw3.h>
+#define GLFW_EXPOSE_NATIVE_WIN32
+#define GLFW_EXPOSE_NATIVE_WGL
+#include <GLFW/glfw3native.h>
 
 namespace Satoshi 
 {
 	class GL4Context : public GraphicsContext
 	{
 	public:
-#ifdef ST_PLATFORM_WINDOWS
-		GL4Context(HWND windowHandle);
+
+		GL4Context(GLFWwindow* windowHandle);
 		virtual ~GL4Context();
-		
-#else
-#endif
 
 		virtual void Present() override;
 		virtual void ClearBuffer() override;
+		virtual void* GetNativeContextData() override;
 
-		virtual void ImGuiInit() override { ImGui_ImplOpenGL3_Init("#version 410"); }
-		virtual void ImGuiShutdown() override { ImGui_ImplOpenGL3_Shutdown(); }
-		virtual void ImGuiNewFrame() override { ImGui_ImplOpenGL3_NewFrame(); }
-		virtual void ImGuiRenderDrawData(ImDrawData* drawData) override { ImGui_ImplOpenGL3_RenderDrawData(drawData); }
+		virtual void SetVSync(bool enabled) override { m_VSync = enabled; }
 
 	private:
-#ifdef ST_PLATFORM_WINDOWS
-		HWND m_Win32WindowHandle;
-		HDC m_HandleDevice;
-		HGLRC m_GLContext;
-#endif
+		GLFWwindow* m_WindowHandle;
+
+		bool m_VSync = false;
 	};
 }
 

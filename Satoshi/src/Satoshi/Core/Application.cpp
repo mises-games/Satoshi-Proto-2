@@ -3,7 +3,11 @@
 #include "MessageQueue.hpp"
 #include <Satoshi/FileSystem/FileHandler.hpp>
 #include "Input.hpp"
-#include "InputCodes.hpp"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <DirectXMath.h>
+#include <Satoshi/Core/InputCodes.hpp>
 
 Satoshi::Application* Satoshi::Application::s_Instance = nullptr;
 
@@ -21,7 +25,10 @@ Satoshi::Application::Application()
 	APIController::SetRendererAPI((Satoshi::RendererAPI)startupArgs["Window"]["Renderer"].as<uint32_t>());
 
 	m_Window.reset(Window::Create());
-
+	
+	m_ImGuiLayer = ImGuiLayer::CreateImGuiLayer();
+	PushOverlay(m_ImGuiLayer);
+	
 	MessageQueue::Start(ST_BIND_EVENT_FUNCTION(Application::OnEvent));
 }
 
@@ -37,10 +44,22 @@ void Satoshi::Application::Run()
 	while (m_Running) 
 	{
 		m_Window->ClearBuffer();
+
 		for (Layer* layer : m_LayerStack)
 			layer->OnUpdate();
+		
+		m_ImGuiLayer->Begin();
+		for (Layer* layer : m_LayerStack)
+			layer->OnImGuiRender();
+		m_ImGuiLayer->End();
+		
 		m_Window->OnUpdate();
 		m_Window->Present();
+
+		if(m_Window->GetInput()->IsKeyPressed(ST_KEY_A))
+		{
+			ST_CORE_INFO("A is pressed");
+		}
 	}
 }
 

@@ -23,6 +23,14 @@ Satoshi::Win32Window::~Win32Window()
 	Shutdown();
 }
 
+void Satoshi::Win32Window::OnUpdate()
+{
+	MSG msg;
+	GetMessage(&msg, m_Window, 0, 0);
+	TranslateMessage(&msg);
+	DispatchMessage(&msg);
+}
+
 void Satoshi::Win32Window::Init(const WindowProps& props)
 {
 	m_Data.Title = std::wstring(props.Title.begin(), props.Title.end());
@@ -35,9 +43,10 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 	uint16_t nCmdShow;
 	POINT initPoint;
 	RECT windowDimensions;
+	HINSTANCE handleInstance;
 
-	SetStartupParameters(&m_HandleInstance, &nCmdLine, &nCmdShow);
-	SetWindowClass(&m_WindowClass);
+	SetStartupParameters(&handleInstance, &nCmdLine, &nCmdShow);
+	SetWindowClass(&m_WindowClass, handleInstance);
 	CalculateWindowDimensionInitialization(&windowDimensions);
 	DefineWindowPosInitialization(&initPoint, windowDimensions);
 
@@ -55,7 +64,7 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 		windowDimensions.bottom - windowDimensions.top,
 		nullptr,
 		nullptr,
-		m_HandleInstance,
+		m_WindowClass.hInstance,
 		nullptr
 	);
 
@@ -74,6 +83,8 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 	QueryPerformanceFrequency((LARGE_INTEGER*) &m_Frequency);
 
 	m_Context = GraphicsContext::Create(m_Window);
+	m_Input = Input::Create();
+	SetVSync(true);
 
 	ShowWindow(m_Window, SW_SHOW);
 	UpdateWindow(m_Window);
@@ -83,6 +94,9 @@ void Satoshi::Win32Window::Shutdown()
 {
 	ReleaseDC(m_Window,m_DeviceHandle);
 	DestroyWindow(m_Window);
+
+	delete m_Context;
+	delete m_Input;
 	
 	--s_Win32WindowCount;
 }
@@ -98,7 +112,7 @@ PIXELFORMATDESCRIPTOR Satoshi::Win32Window::GetPixelFormat()
 	PIXELFORMATDESCRIPTOR result = {};
 	result.nSize = sizeof(PIXELFORMATDESCRIPTOR);
 	result.nVersion = 1;
-	result.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DIRECT3D_ACCELERATED | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+	result.dwFlags = PFD_DRAW_TO_WINDOW | PFD_DIRECT3D_ACCELERATED | PFD_SUPPORT_OPENGL;
 	result.iPixelType = PFD_TYPE_RGBA;
 	result.cColorBits = 32;
 	result.cDepthBits = 24;
@@ -108,10 +122,16 @@ PIXELFORMATDESCRIPTOR Satoshi::Win32Window::GetPixelFormat()
 	return result;
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 LRESULT Satoshi::Win32Window::Callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wParam, lParam))
+		return true;
 	switch (msg)
 	{
+	case WM_ERASEBKGND:
+		return 0;
 	case WM_CLOSE:
 	{
 		msg = WM_QUIT;
@@ -231,16 +251,16 @@ void Satoshi::Win32Window::SetStartupParameters(HINSTANCE* instance, LPWSTR* lpC
 	*nCmdShow = si.wShowWindow;
 }
 
-void Satoshi::Win32Window::SetWindowClass(WNDCLASSEXW* windowClass)
+void Satoshi::Win32Window::SetWindowClass(WNDCLASSEXW* windowClass, HINSTANCE handleInstance)
 {
 	windowClass->cbSize = sizeof(*windowClass);
 	windowClass->style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	windowClass->lpfnWndProc = Win32Window::Callback;
 	windowClass->cbClsExtra = 0;
 	windowClass->cbWndExtra = 0;
-	windowClass->hInstance = m_HandleInstance;
+	windowClass->hInstance = handleInstance;
 	windowClass->hIcon = nullptr;
-	windowClass->hCursor = LoadCursor(m_HandleInstance, MAKEINTRESOURCE(230));
+	windowClass->hCursor = LoadCursor(handleInstance, MAKEINTRESOURCE(230));
 	windowClass->hbrBackground = CreateSolidBrush(RGB(0, 0, 0));
 	windowClass->lpszMenuName = nullptr;
 	windowClass->lpszClassName = m_Data.Title.c_str();
@@ -252,14 +272,6 @@ void Satoshi::Win32Window::DefineWindowPosInitialization(LPPOINT initPoint, cons
 	int height = GetSystemMetrics(SM_CYSCREEN);
 	initPoint->x = (width - windowRectangle.right + windowRectangle.left) / 2;
 	initPoint->y = (height - windowRectangle.bottom + windowRectangle.top) / 2;
-}
-
-void Satoshi::Win32Window::OnUpdate()
-{
-	MSG msg;
-	GetMessage(&msg, m_Window, 0, 0);
-	TranslateMessage(&msg);
-	DispatchMessage(&msg);
 }
 
 #endif
