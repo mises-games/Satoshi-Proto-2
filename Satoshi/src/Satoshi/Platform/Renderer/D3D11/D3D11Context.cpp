@@ -32,7 +32,7 @@ void Satoshi::D3D11Context::Init(HWND windowHandle)
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		(UINT)D3D11_CREATE_DEVICE_DEBUG,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -45,7 +45,7 @@ void Satoshi::D3D11Context::Init(HWND windowHandle)
 
 	ST_CORE_ASSERT(debug == S_OK,"Failed to initialize Direct 3D 11!");
 
-	ID3D11Resource* m_BackBuffer;
+	ID3D11Texture2D* m_BackBuffer;
 	debug = m_Swapper->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void **>(&m_BackBuffer));
 	ST_CORE_ASSERT(debug == S_OK, "You must have a valid Direct3d Resource");
 	debug = m_Device->CreateRenderTargetView(m_BackBuffer, nullptr, &m_TargetView);
@@ -68,7 +68,7 @@ void Satoshi::D3D11Context::ClearBuffer()
 
 void* Satoshi::D3D11Context::GetNativeContextData()
 {
-	return &ImGuiDX11Init(m_Device, m_DeviceContext);
+	return new D3D11ContextData(m_Device, m_DeviceContext);
 }
 
 

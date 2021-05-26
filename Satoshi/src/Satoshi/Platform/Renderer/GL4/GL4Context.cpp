@@ -27,6 +27,5 @@ void Satoshi::GL4Context::ClearBuffer()
 
 void* Satoshi::GL4Context::GetNativeContextData()
 {
-	auto version = "#version 410";
-	return &version;
+	return new GL4ContextData("#version 410");
 }

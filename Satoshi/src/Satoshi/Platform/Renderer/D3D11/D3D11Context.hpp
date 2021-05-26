@@ -11,12 +11,12 @@
 
 namespace Satoshi
 {
-	struct ImGuiDX11Init
+	struct D3D11ContextData
 	{
 		ID3D11Device* Device;
 		ID3D11DeviceContext* DeviceContext;
 
-		ImGuiDX11Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext) :
+		D3D11ContextData(ID3D11Device* device, ID3D11DeviceContext* deviceContext) :
 			Device(device), DeviceContext(deviceContext)
 		{}
 	};
@@ -30,6 +30,7 @@ namespace Satoshi
 		virtual void* GetNativeContextData() override;
 
 		virtual void SetVSync(bool enabled) override { m_VSync = enabled; }
+		virtual bool IsVSync() override { return m_VSync; }
 
 	private:
 		void Init(HWND windowHandle);

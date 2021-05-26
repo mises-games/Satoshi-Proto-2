@@ -23,11 +23,13 @@ namespace Satoshi
 		virtual void SetHeight(uint32_t height) override { m_Data.Height = height; }
 
 		virtual double GetTime() const override { return glfwGetTime(); }
+
 		virtual void SetVSync(bool enabled) override { m_Context->SetVSync(enabled); }
+		virtual bool IsVSync() override { return m_Context->IsVSync(); }
+		virtual void SetEventCallback(const EventCallbackFunction& callback) override { m_Data.EventCallback = callback; }
 
 		virtual void Present() override { m_Context->Present(); }
 		virtual void ClearBuffer() override { m_Context->ClearBuffer(); }
-		virtual Input* GetInput() override { return m_Input; }
 
 		virtual void* GetNativeWindow() override { return m_Window; }
 		virtual GraphicsContext* GetContext() override { return m_Context; }
@@ -40,12 +42,13 @@ namespace Satoshi
 
 		GLFWwindow* m_Window;
 		GraphicsContext* m_Context;
-		Input* m_Input;
 
 		struct WindowData
 		{
 			std::string Title;
 			unsigned int Width, Height;
+
+			EventCallbackFunction EventCallback;
 		};
 
 		WindowData m_Data;

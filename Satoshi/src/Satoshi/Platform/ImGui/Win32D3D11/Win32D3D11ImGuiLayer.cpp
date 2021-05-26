@@ -13,9 +13,10 @@ Satoshi::Win32D3D11ImGuiLayer::Win32D3D11ImGuiLayer() :
 {
 	auto app = Satoshi::Application::GetInstance();
 	m_Window = static_cast<HWND>(app->GetWindow()->GetNativeWindow());
-	auto deviceHandler = *static_cast<ImGuiDX11Init*>(app->GetWindow()->GetContext()->GetNativeContextData());
-	m_Device = deviceHandler.Device;
-	m_DeviceContext = deviceHandler.DeviceContext;
+	auto deviceHandler = static_cast<D3D11ContextData*>(app->GetWindow()->GetContext()->GetNativeContextData());
+	m_Device = deviceHandler->Device;
+	m_DeviceContext = deviceHandler->DeviceContext;
+	delete deviceHandler;
 }
 
 Satoshi::Win32D3D11ImGuiLayer::~Win32D3D11ImGuiLayer()
@@ -24,16 +25,22 @@ Satoshi::Win32D3D11ImGuiLayer::~Win32D3D11ImGuiLayer()
 
 void Satoshi::Win32D3D11ImGuiLayer::OnAttach()
 {
+	ImGui_ImplWin32_EnableDpiAwareness();
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	
 
 	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
+	
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
+	io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
+
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	ImGui::StyleColorsDark();
@@ -57,8 +64,6 @@ void Satoshi::Win32D3D11ImGuiLayer::OnDetach()
 
 void Satoshi::Win32D3D11ImGuiLayer::OnImGuiRender()
 {
-	if(ShowContent)
-		ImGui::ShowDemoWindow(&ShowContent);
 }
 
 void Satoshi::Win32D3D11ImGuiLayer::Begin()
@@ -70,7 +75,7 @@ void Satoshi::Win32D3D11ImGuiLayer::Begin()
 
 void Satoshi::Win32D3D11ImGuiLayer::End()
 {
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGuiIO& io = ImGui::GetIO();
 	auto app = Application::GetInstance();
 	io.DisplaySize = ImVec2((float) app->GetWindow()->GetWidth(), (float) app->GetWindow()->GetHeight());
 

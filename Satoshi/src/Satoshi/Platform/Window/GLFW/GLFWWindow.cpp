@@ -4,7 +4,6 @@
 #include <Satoshi/Events/ApplicationEvent.hpp>
 #include <Satoshi/Events/MouseEvent.hpp>
 #include <Satoshi/Events/KeyEvent.hpp>
-#include <Satoshi/Core/MessageQueue.hpp>
 
 static uint8_t s_GLFWWindowCount = 0;
 
@@ -26,6 +25,7 @@ Satoshi::GLFWWindow::~GLFWWindow()
 void Satoshi::GLFWWindow::OnUpdate()
 {
 	glfwPollEvents();
+	Present();
 }
 
 void Satoshi::GLFWWindow::Init(const WindowProps& props)
@@ -49,8 +49,9 @@ void Satoshi::GLFWWindow::Init(const WindowProps& props)
 	++s_GLFWWindowCount;
 
 	m_Context = GraphicsContext::Create(m_Window);
-	m_Input = Input::Create();
 	SetVSync(true);
+
+	glfwSetWindowUserPointer(m_Window, &m_Data);
 
 	SetGLCallbacks();
 }
@@ -59,7 +60,6 @@ void Satoshi::GLFWWindow::Shutdown()
 {
 	glfwDestroyWindow(m_Window);
 	delete m_Context;
-	delete m_Input;
 
 	--s_GLFWWindowCount;
 
@@ -73,32 +73,39 @@ void Satoshi::GLFWWindow::SetGLCallbacks()
 {
 	glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 	{
-		MessageQueue::EnqueueMessage({ EventType::WindowResized, new WindowResizeData((unsigned)(width), (unsigned)(height)) });
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		WindowResizeEvent event((unsigned)(width), (unsigned)(height));
+		data->EventCallback(event);
 	});
 
 	glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 	{
-		MessageQueue::EnqueueMessage({ EventType::WindowClosed, nullptr });
-
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		WindowCloseEvent event;
+		data->EventCallback(event);
 	});
 
 	glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		switch (action)
 		{
 			case GLFW_PRESS:
 			{
-				MessageQueue::EnqueueMessage({ EventType::KeyPressed, new KeyPressedData((unsigned)key, 0) });
+				KeyPressedEvent event((unsigned)key, 0);
+				data->EventCallback(event);
 				break;
 			}
 			case GLFW_RELEASE:
 			{
-				MessageQueue::EnqueueMessage({ EventType::KeyReleased, new KeyData((unsigned)key) });
+				KeyReleasedEvent event((unsigned)key);
+				data->EventCallback(event);
 				break;
 			}
 			case GLFW_REPEAT:
 			{
-				MessageQueue::EnqueueMessage({ EventType::KeyPressed, new KeyPressedData((unsigned)key, 1) });
+				KeyPressedEvent event((unsigned)key, 1);
+				data->EventCallback(event);
 				break;
 			}
 		}
@@ -106,21 +113,26 @@ void Satoshi::GLFWWindow::SetGLCallbacks()
 
 	glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 	{
-		MessageQueue::EnqueueMessage({ EventType::CharTyped, new KeyData((unsigned)keycode) });
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		CharTypedEvent event((unsigned)keycode);
+		data->EventCallback(event);
 	});
 
 	glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 	{
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 		switch (action)
 		{
 		case GLFW_PRESS:
 		{
-			MessageQueue::EnqueueMessage({ EventType::MouseButtonPressed, new MouseButtonData(button) });
+			MouseButtonPressedEvent event((unsigned)button);
+			data->EventCallback(event);
 			break;
 		}
 		case GLFW_RELEASE:
 		{
-			MessageQueue::EnqueueMessage({ EventType::MouseButtonReleased, new MouseButtonData(button) });
+			MouseButtonReleasedEvent event((unsigned)button);
+			data->EventCallback(event);
 			break;
 		}
 		}
@@ -128,12 +140,15 @@ void Satoshi::GLFWWindow::SetGLCallbacks()
 
 	glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 	{
-		MessageQueue::EnqueueMessage({ EventType::MouseScrolled, new MousePositionData(xOffset, yOffset) });
-
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		MouseScrolledEvent event((float) xOffset, (float) yOffset);
+		data->EventCallback(event);
 	});
 
 	glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 	{
-		MessageQueue::EnqueueMessage({ EventType::MouseMoved, new MousePositionData((float)xPos, (float)yPos) });
+		WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+		MouseMovedEvent event((float)xPos, (float)yPos);
+		data->EventCallback(event);
 	});
 }

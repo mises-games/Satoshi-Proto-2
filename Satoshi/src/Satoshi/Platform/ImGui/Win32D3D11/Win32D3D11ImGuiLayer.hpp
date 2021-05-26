@@ -22,11 +22,10 @@ namespace Satoshi
 		virtual void Begin() override;
 		virtual void End() override;
 	private:
+		bool m_ShowContent = true;
 		HWND m_Window;
 		ID3D11Device* m_Device;
 		ID3D11DeviceContext* m_DeviceContext;
-
-		bool ShowContent = true;
 	};
 }
 

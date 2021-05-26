@@ -41,13 +41,14 @@ namespace Satoshi {
 		virtual double GetTime() const = 0;
 
 		virtual void SetVSync(bool enabled) = 0;
+		virtual bool IsVSync() = 0;
+		virtual void SetEventCallback(const EventCallbackFunction& callback) = 0;
 
 		virtual void Present() = 0;
 		virtual void ClearBuffer() = 0;
 
 		virtual void* GetNativeWindow() = 0;
 		virtual GraphicsContext* GetContext() = 0;
-		virtual Input* GetInput() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

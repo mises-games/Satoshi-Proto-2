@@ -12,6 +12,7 @@ namespace Satoshi
 		virtual void ClearBuffer() = 0;
 
 		virtual void SetVSync(bool enabled) = 0;
+		virtual bool IsVSync() = 0;
 
 		virtual void* GetNativeContextData() = 0;
 

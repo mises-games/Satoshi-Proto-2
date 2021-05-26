@@ -6,14 +6,16 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 #include <Satoshi/Core/Application.hpp>
-#include <Satoshi/Platform/Renderer/D3D11/D3D11Context.hpp>
+#include <Satoshi/Platform/Renderer/GL4/GL4Context.hpp>
 
 Satoshi::GLFWGL4ImGuiLayer::GLFWGL4ImGuiLayer() :
 	ImGuiLayer()
 {
 	auto app = Satoshi::Application::GetInstance();
-	m_Window = static_cast<GLFWwindow *>(app->GetWindow()->GetNativeWindow());
-	m_GLVersion = *static_cast<const char**>(app->GetWindow()->GetContext()->GetNativeContextData());
+	m_Window = static_cast<GLFWwindow*>(app->GetWindow()->GetNativeWindow());
+	auto deviceHandler = static_cast<GL4ContextData*>(app->GetWindow()->GetContext()->GetNativeContextData());
+	m_GLVersion = deviceHandler->GLVersion;
+	delete deviceHandler;
 }
 
 Satoshi::GLFWGL4ImGuiLayer::~GLFWGL4ImGuiLayer()
@@ -55,8 +57,6 @@ void Satoshi::GLFWGL4ImGuiLayer::OnDetach()
 
 void Satoshi::GLFWGL4ImGuiLayer::OnImGuiRender()
 {
-	if (ShowContent)
-		ImGui::ShowDemoWindow(&ShowContent);
 }
 
 void Satoshi::GLFWGL4ImGuiLayer::Begin()

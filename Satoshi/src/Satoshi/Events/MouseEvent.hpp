@@ -5,15 +5,6 @@
 
 namespace Satoshi
 {
-	struct MousePositionData
-	{
-		float XData;
-		float YData;
-
-		MousePositionData(float xData, float yData) :
-			XData(xData), YData(yData) {}
-	};
-
 	class MouseMovedEvent : public Event
 	{
 	public:
@@ -56,14 +47,6 @@ namespace Satoshi
 			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
 		float m_XOffset, m_YOffset;
-	};
-
-	struct MouseButtonData
-	{
-		uint32_t ButtonCode;
-
-		MouseButtonData(uint32_t buttonCode) :
-			ButtonCode(buttonCode) {}
 	};
 
 	class MouseButtonEvent : public Event

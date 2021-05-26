@@ -1,7 +1,5 @@
-
 #include <Satoshi/Satoshi.hpp>
-#include <Satoshi/Core/EntryPoint.hpp>
-#include <Satoshi/ImGui/ImGuiLayer.hpp>
+#include "DemoLayer.hpp"
 
 class Sandbox : public Satoshi::Application
 {
@@ -9,7 +7,8 @@ public:
 	Sandbox() :
 		Satoshi::Application()
 	{
-		PushLayer(new Satoshi::ImGuiLayer());
+		PushLayer(new DemoLayer());
+		//PushLayer(new Satoshi::ImGuiLayer());
 	}
 
 	~Sandbox()

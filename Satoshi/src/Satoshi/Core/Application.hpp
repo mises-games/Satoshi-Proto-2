@@ -3,10 +3,10 @@
 
 #include <Satoshi/Renderer/APIController.hpp>
 #include <Satoshi/Core/Window.hpp>
-#include "MessageQueue.hpp"
 #include <Satoshi/Events/ApplicationEvent.hpp>
 #include <Satoshi/Core/LayerStack.hpp>
 #include <Satoshi/ImGui/ImGuiLayer.hpp>
+#include <Satoshi/Samples/Sample.hpp>
 
 namespace Satoshi
 {
@@ -33,6 +33,7 @@ namespace Satoshi
 		static Application* s_Instance;
 
 		std::unique_ptr<Window> m_Window;
+		Sample* m_Sample;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;

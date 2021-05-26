@@ -11,10 +11,13 @@ namespace Satoshi
 	public:
 		static uint16_t MapInput(uint16_t code)
 		{
-			return s_Codes[code - 1];
+			uint16_t key = 0;
+			if (s_Codes.find(code) != s_Codes.end())
+				key = s_Codes[code];
+			return key;
 		}
 	private:
-		static uint16_t s_Codes[116];
+		static std::unordered_map<uint16_t, uint16_t> s_Codes;
 	};
 }
 

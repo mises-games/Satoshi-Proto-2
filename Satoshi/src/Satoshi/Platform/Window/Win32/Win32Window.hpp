@@ -30,31 +30,32 @@ namespace Satoshi
 			return ((cycle - m_StartTime)*1.0/m_Frequency);
 		}
 		virtual void SetVSync(bool enabled) override { m_Context->SetVSync(enabled); }
+		virtual bool IsVSync() override { return m_Context->IsVSync(); }
+		virtual void SetEventCallback(const EventCallbackFunction& callback) override { m_Data.EventCallback = callback; }
 
 		virtual void Present() override { m_Context->Present(); }
 		virtual void ClearBuffer() override { m_Context->ClearBuffer(); }
 
 		virtual void* GetNativeWindow() override { return m_Window; }
 		virtual GraphicsContext* GetContext() override { return m_Context; }
-		virtual Input* GetInput() override { return m_Input; }
 
+		
 	private:
 		void Init(const WindowProps& props);
 		void Shutdown();
 		
 		void SetStartupParameters(HINSTANCE* instance, LPWSTR* nCmdLine, uint16_t* nCmdShow);
-		void SetWindowClass(WNDCLASSEXW* windowClass, HINSTANCE handleInstance);
+		void SetWindowClass(WNDCLASSEXW* windowClass, HINSTANCE handleInstance, LPCWSTR className);
 		void DefineWindowPosInitialization(LPPOINT initPoint, const RECT& windowRectangle);
 		void CalculateWindowDimensionInitialization(LPRECT dimensions);
-		PIXELFORMATDESCRIPTOR GetPixelFormat();
-
+		
 		static LRESULT Callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		HWND m_Window;
-		WNDCLASSEX m_WindowClass = {0};
-		HDC m_DeviceHandle;
+		WNDCLASSEXW m_WindowClass = {0};
 		GraphicsContext* m_Context;
-		Input* m_Input;
+
+		uint64_t val = 0;
 
 		uint64_t m_StartTime;
 		uint64_t m_Frequency;
@@ -63,6 +64,8 @@ namespace Satoshi
 		{
 			std::wstring Title;
 			unsigned int Width, Height;
+
+			EventCallbackFunction EventCallback;
 		};
 
 		WindowData m_Data;

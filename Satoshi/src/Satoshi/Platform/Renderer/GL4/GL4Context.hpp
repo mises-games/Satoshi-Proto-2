@@ -4,15 +4,21 @@
 #include <Satoshi/stpch.hpp>
 #include <Satoshi/Renderer/GraphicsContext.hpp>
 
-#include <glad/wgl.h>
+#include "gl_safe_include.h"
 #include <backends/imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
-#define GLFW_EXPOSE_NATIVE_WIN32
-#define GLFW_EXPOSE_NATIVE_WGL
-#include <GLFW/glfw3native.h>
 
 namespace Satoshi 
 {
+	struct GL4ContextData
+	{
+		std::string_view GLVersion;
+
+		GL4ContextData(std::string_view glVersion) :
+			GLVersion(glVersion)
+		{}
+	};
+
 	class GL4Context : public GraphicsContext
 	{
 	public:
@@ -25,6 +31,7 @@ namespace Satoshi
 		virtual void* GetNativeContextData() override;
 
 		virtual void SetVSync(bool enabled) override { m_VSync = enabled; }
+		virtual bool IsVSync() override { return m_VSync; }
 
 	private:
 		GLFWwindow* m_WindowHandle;

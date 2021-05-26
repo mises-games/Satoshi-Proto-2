@@ -10,12 +10,12 @@ namespace Satoshi
 {
 	class Win32Input : public Input
 	{
-	public:
-		virtual bool IsKeyPressed(uint16_t keycode) override;
-		virtual bool IsMouseButtonPressed(uint16_t button) override;
-		virtual std::pair<float, float> GetMousePos() override;
-		virtual float GetMouseX() override;
-		virtual float GetMouseY() override;
+	protected:
+		virtual bool IsKeyPressedImpl(uint16_t keycode) override;
+		virtual bool IsMouseButtonPressedImpl(uint16_t button) override;
+		virtual std::pair<float, float> GetMousePosImpl() override;
+		virtual float GetMouseXImpl() override;
+		virtual float GetMouseYImpl() override;
 	};
 }
 

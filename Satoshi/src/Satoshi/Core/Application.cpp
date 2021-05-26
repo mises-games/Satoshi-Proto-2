@@ -1,6 +1,5 @@
 ﻿#include <Satoshi/stpch.hpp>
 #include "Application.hpp"
-#include "MessageQueue.hpp"
 #include <Satoshi/FileSystem/FileHandler.hpp>
 #include "Input.hpp"
 
@@ -28,14 +27,18 @@ Satoshi::Application::Application()
 	
 	m_ImGuiLayer = ImGuiLayer::CreateImGuiLayer();
 	PushOverlay(m_ImGuiLayer);
+
+	m_Sample = Satoshi::Sample::Create();
+	m_Sample->Start(m_Window->GetContext()->GetNativeContextData());
 	
-	MessageQueue::Start(ST_BIND_EVENT_FUNCTION(Application::OnEvent));
+	Input::Create();
+	m_Window->SetEventCallback(ST_BIND_EVENT_FUNCTION(Application::OnEvent));
 }
 
 Satoshi::Application::~Application()
 {
 	m_Window.reset();
-	MessageQueue::End();
+	Input::Destroy();
 }
 
 void Satoshi::Application::Run()
@@ -48,15 +51,17 @@ void Satoshi::Application::Run()
 		for (Layer* layer : m_LayerStack)
 			layer->OnUpdate();
 		
+		m_Sample->Update();
+
 		m_ImGuiLayer->Begin();
 		for (Layer* layer : m_LayerStack)
 			layer->OnImGuiRender();
 		m_ImGuiLayer->End();
 		
-		m_Window->OnUpdate();
-		m_Window->Present();
 
-		if(m_Window->GetInput()->IsKeyPressed(ST_KEY_A))
+		m_Window->OnUpdate();
+
+		if(Input::IsKeyPressed(ST_KEY_A))
 		{
 			ST_CORE_INFO("A is pressed");
 		}

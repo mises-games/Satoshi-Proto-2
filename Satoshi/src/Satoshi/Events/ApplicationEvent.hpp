@@ -5,15 +5,6 @@
 
 namespace Satoshi
 {
-	struct WindowResizeData
-	{
-		unsigned Width;
-		unsigned Height;
-
-		WindowResizeData(unsigned width, unsigned clientHeight) :
-			Width(width), Height(clientHeight) {}
-	};
-
 	class WindowResizeEvent : public Event
 	{
 	public:

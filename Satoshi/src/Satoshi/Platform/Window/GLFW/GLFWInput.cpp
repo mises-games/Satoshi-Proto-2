@@ -3,21 +3,21 @@
 #include <Satoshi/Core/Application.hpp>
 #include <GLFW/glfw3.h>
 
-bool Satoshi::GLFWInput::IsKeyPressed(uint16_t keycode)
+bool Satoshi::GLFWInput::IsKeyPressedImpl(uint16_t keycode)
 {
 	auto window = static_cast<GLFWwindow *>(Application::GetInstance()->GetWindow()->GetNativeWindow());
 	auto state = glfwGetKey(window, Satoshi::GLFWInputMapper::MapInput(keycode));
 	return (state == GLFW_PRESS || state == GLFW_REPEAT);
 }
 
-bool Satoshi::GLFWInput::IsMouseButtonPressed(uint16_t button)
+bool Satoshi::GLFWInput::IsMouseButtonPressedImpl(uint16_t button)
 {
 	auto window = static_cast<GLFWwindow*>(Application::GetInstance()->GetWindow()->GetNativeWindow());
 	auto state = glfwGetMouseButton(window, Satoshi::GLFWInputMapper::MapInput(button));
 	return (state == GLFW_PRESS || state == GLFW_REPEAT);
 }
 
-std::pair<float, float> Satoshi::GLFWInput::GetMousePos()
+std::pair<float, float> Satoshi::GLFWInput::GetMousePosImpl()
 {
 	auto window = static_cast<GLFWwindow*>(Application::GetInstance()->GetWindow()->GetNativeWindow());
 	double xpos, ypos;
@@ -25,12 +25,12 @@ std::pair<float, float> Satoshi::GLFWInput::GetMousePos()
 	return std::pair<float, float>((float)xpos, (float)ypos);
 }
 
-float Satoshi::GLFWInput::GetMouseX()
+float Satoshi::GLFWInput::GetMouseXImpl()
 {
-	return GetMousePos().first;
+	return GetMousePosImpl().first;
 }
 
-float Satoshi::GLFWInput::GetMouseY()
+float Satoshi::GLFWInput::GetMouseYImpl()
 {
-	return GetMousePos().second;
+	return GetMousePosImpl().second;
 }

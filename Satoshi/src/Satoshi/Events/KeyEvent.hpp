@@ -5,14 +5,6 @@
 
 namespace Satoshi
 {
-	struct KeyData
-	{
-		uint32_t KeyCode;
-
-		KeyData(uint32_t keycode) :
-			KeyCode(keycode) {}
-	};
-
 	class KeyEvent : public Event
 	{
 	public:
@@ -24,15 +16,6 @@ namespace Satoshi
 			: m_KeyCode(keycode) {}
 
 		uint32_t m_KeyCode;
-	};
-
-	struct KeyPressedData
-	{
-		const uint32_t KeyCode;
-		const uint16_t RepeatCount;
-
-		KeyPressedData(const uint32_t keycode, const uint16_t repeatCount) :
-			KeyCode(keycode), RepeatCount(repeatCount) {}
 	};
 
 	class KeyPressedEvent : public KeyEvent
