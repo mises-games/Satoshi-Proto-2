@@ -90,8 +90,10 @@ void Satoshi::Win32Window::Init(const WindowProps& props)
 
 void Satoshi::Win32Window::Shutdown()
 {
+	auto hInstance = m_WindowClass.hInstance;
 	UnregisterClass(m_Data.Title.c_str(), m_WindowClass.hInstance);
 	DestroyWindow(m_Window);
+	FreeLibrary(hInstance);
 
 	delete m_Context;
 	
@@ -238,7 +240,8 @@ LRESULT Satoshi::Win32Window::Callback(HWND hwnd, UINT msg, WPARAM wParam, LPARA
 
 void Satoshi::Win32Window::SetStartupParameters(HINSTANCE* instance, LPWSTR* lpCmdLine, uint16_t* nCmdShow)
 {
-	*instance = GetModuleHandle(NULL);
+	if(*instance == nullptr)
+		GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, NULL, instance);
 	*lpCmdLine = GetCommandLineW();
 	STARTUPINFO si;
 	GetStartupInfo(&si);

@@ -87,7 +87,8 @@ project "Satoshi"
             "opengl32.lib",
             "d3d11.lib",
             "d3dcompiler.lib",
-            "Ws2_32.lib"
+            "Ws2_32.lib",
+            "gdi32.lib"
         }
     
     filter "configurations:Debug"
@@ -144,6 +145,12 @@ project "Sandbox"
         {
             "ST_PLATFORM_WINDOWS"
         }
+    
+    filter {"system:windows", "configurations:Release"}
+        kind "WindowedAPP"
+    
+    filter {"system:windows", "configurations:Dist"}
+        kind "WindowedAPP"
 
     filter "configurations:Debug"
         defines "ST_DEBUG"

@@ -8,7 +8,6 @@ public:
 		Satoshi::Application()
 	{
 		PushLayer(new DemoLayer());
-		//PushLayer(new Satoshi::ImGuiLayer());
 	}
 
 	~Sandbox()

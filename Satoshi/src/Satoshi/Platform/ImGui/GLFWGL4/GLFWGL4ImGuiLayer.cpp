@@ -1,8 +1,6 @@
 #include <Satoshi/stpch.hpp>
 #include "GLFWGL4ImGuiLayer.hpp"
 
-#ifdef ST_PLATFORM_WINDOWS
-
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 #include <Satoshi/Core/Application.hpp>
@@ -83,5 +81,3 @@ void Satoshi::GLFWGL4ImGuiLayer::End()
 		glfwMakeContextCurrent(backup_current_context);
 	}
 }
-
-#endif

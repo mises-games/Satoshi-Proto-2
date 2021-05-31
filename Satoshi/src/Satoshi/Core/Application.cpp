@@ -24,13 +24,13 @@ Satoshi::Application::Application()
 	APIController::SetRendererAPI((Satoshi::RendererAPI)startupArgs["Window"]["Renderer"].as<uint32_t>());
 
 	m_Window.reset(Window::Create());
-	
+
 	m_ImGuiLayer = ImGuiLayer::CreateImGuiLayer();
 	PushOverlay(m_ImGuiLayer);
 
 	m_Sample = Satoshi::Sample::Create();
 	m_Sample->Start(m_Window->GetContext()->GetNativeContextData());
-	
+
 	Input::Create();
 	m_Window->SetEventCallback(ST_BIND_EVENT_FUNCTION(Application::OnEvent));
 }
